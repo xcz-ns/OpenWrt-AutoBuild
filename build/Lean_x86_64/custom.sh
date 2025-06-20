@@ -278,7 +278,7 @@ EOF
 
 # ShadowsocksR插件:
 cat >> .config <<EOF
-# CONFIG_PACKAGE_luci-app-ssr-plus=n
+CONFIG_PACKAGE_luci-app-ssr-plus=n
 # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_SagerNet_Core is not set
 EOF
 
@@ -316,7 +316,7 @@ CONFIG_PACKAGE_luci-app-arpbind=y #IP/MAC绑定
 CONFIG_PACKAGE_luci-app-wol=y #网络唤醒
 # CONFIG_PACKAGE_luci-app-nps=n #nps内网穿透
 # CONFIG_PACKAGE_luci-app-frpc=n #Frp内网穿透
-# CONFIG_PACKAGE_luci-app-nlbwmon=n #宽带流量监控
+CONFIG_PACKAGE_luci-app-nlbwmon=n #宽带流量监控
 CONFIG_PACKAGE_luci-app-wrtbwmon=y #实时流量监测
 # CONFIG_PACKAGE_luci-app-haproxy-tcp=n #Haproxy负载均衡
 CONFIG_PACKAGE_luci-app-diskman=y #磁盘管理磁盘信息
@@ -340,6 +340,7 @@ CONFIG_PACKAGE_luci-app-lucky=y #lucky
 CONFIG_PACKAGE_luci-app-uhttpd=y #uhttpd
 CONFIG_PACKAGE_luci-app-GoWebDav=y #GoWebDav
 CONFIG_PACKAGE_luci-app-filebrowser=y #filebrowser
+CONFIG_PACKAGE_luci-proto-wireguard=y
 #
 # VPN相关插件(禁用):
 #
