@@ -20,9 +20,7 @@ on:
         default: Lean_x86_64
         options:
           - Lean_x86_64
-          - Lean_x86_64_Long
           - immortalwrt_x86_64
-          - immortalwrt_ax6600
 
       CACHE_BUILD:
         description: '缓存加速'
