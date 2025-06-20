@@ -19,6 +19,7 @@ on:
         type: choice
         default: Lean_x86_64
         options:
+          - all
           - Lean_x86_64
           - immortalwrt_x86_64
 
@@ -62,7 +63,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(
-          github.event_name == 'schedule' && '["Lean_x86_64","Lean_x86_64_Long","immortalwrt_x86_64","immortalwrt_ax6600"]' || 
+          github.event_name == 'schedule' && '["Lean_x86_64","immortalwrt_x86_64"]' || 
           format('["{0}"]', github.event.inputs.MODEL )
           )}}
 
