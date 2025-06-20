@@ -242,7 +242,7 @@ jobs:
   #      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
 
     - name: SSH远程连接服务器
-      uses: 281677160/common@need
+      uses: danshui-git/debugger-action@main
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.SSH_ACTION == 'true')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
