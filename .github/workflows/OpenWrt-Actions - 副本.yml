@@ -93,6 +93,24 @@ jobs:
         echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
         echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
 
+    - name: 创建模拟物理磁盘
+      run: |
+        mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 1)
+        root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 4)
+        sudo truncate -s "${mnt_size}"G /mnt/mnt.img
+        sudo truncate -s "${root_size}"G /root.img
+        sudo losetup /dev/loop6 /mnt/mnt.img
+        sudo losetup /dev/loop7 /root.img
+        sudo pvcreate /dev/loop6
+        sudo pvcreate /dev/loop7
+        sudo vgcreate github /dev/loop6 /dev/loop7
+        sudo lvcreate -n runner -l 100%FREE github
+        sudo mkfs.xfs /dev/github/runner
+        sudo mkdir -p /github-builder
+        sudo mount /dev/github/runner /github-builder
+        sudo chown -R $USER:$GROUPS /github-builder
+        df -Th
+
     - name: 下载${{matrix.target}}源码
       working-directory: /github-builder
       run: |
@@ -108,6 +126,15 @@ jobs:
         toolchain: 'false'
         prefix: ${{ github.workspace }}/openwrt
         mixkey: ''  # 清空mixkey，避免加hash，保持和现有缓存格式一致
+        
+    - name: 显示缓存命中状态
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      run: |
+        if [ "${{ steps.cache.outputs.hit }}" = "true" ]; then
+          echo "✅ 缓存已命中，可以加速编译"
+        else
+          echo "❌ 未命中缓存，将执行完整编译"
+        fi
 
     - name: 更新时区、编译时间
       id: date
