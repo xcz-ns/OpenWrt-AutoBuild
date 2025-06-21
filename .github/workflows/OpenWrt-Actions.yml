@@ -172,6 +172,7 @@ jobs:
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
         ccache: 'true'
+        toolchain: 'false'
         prefix: ${{ github.workspace }}/openwrt
         mixkey: ''  # 清空mixkey，避免加hash，保持和现有缓存格式一致
         
