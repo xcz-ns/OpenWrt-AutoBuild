@@ -7,7 +7,7 @@
 #
 
 
-name: 编译OpenWrt固件 1
+name: 编译OpenWrt固件1
 
 on:
   workflow_dispatch:
@@ -120,10 +120,11 @@ jobs:
 
     - name: 缓存加速
       uses: xcz-ns/cachewrtbuild@main
+      # uses: stupidloud/cachewrtbuild@main
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
         ccache: 'true'
-        prefix: ${{ github.workspace }}
+        prefix: ${{ github.workspace }}/openwrt
 
     - name: 更新时区、编译时间
       id: date
