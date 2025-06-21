@@ -167,21 +167,42 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /github-builder/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: 缓存加速
-      uses: stupidloud/cachewrtbuild@main
+    - name: 缓存 OpenWrt 编译目录（dl + toolchain）
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      id: cache-openwrt
+      uses: actions/cache@v3
       with:
-        ccache: 'true'
-        prefix: ${{ github.workspace }}/openwrt
-        mixkey: ''  # 清空mixkey，避免加hash，保持和现有缓存格式一致
-        
+        path: |
+          ${{ github.workspace }}/openwrt/dl
+          ${{ github.workspace }}/openwrt/staging_dir/toolchain*
+        key: cache-openwrt--${{ hashFiles('openwrt/.config', 'openwrt/feeds.conf.default', 'openwrt/include/version.mk', 'openwrt/Makefile') }}
+        restore-keys: |
+          cache-openwrt--
+
+    - name: 缓存 ccache
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      id: cache-ccache
+      uses: actions/cache@v3
+      with:
+        path: ~/.ccache
+        key: ccache-${{ matrix.target }}-${{ hashFiles('openwrt/.config') }}
+        restore-keys: |
+          ccache-${{ matrix.target }}-
+
     - name: 显示缓存命中状态
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       run: |
-        if [ "${{ steps.cache.outputs.hit }}" = "true" ]; then
-          echo "✅ 缓存已命中，可以加速编译"
+        echo "🔍 缓存命中状态："
+        if [ "${{ steps.cache-openwrt.outputs.cache-hit }}" == 'true' ]; then
+          echo "✅ 编译目录缓存命中"
         else
-          echo "❌ 未命中缓存，将执行完整编译"
+          echo "❌ 编译目录未命中（将重新生成缓存）"
+        fi
+
+        if [ "${{ steps.cache-ccache.outputs.cache-hit }}" == 'true' ]; then
+          echo "✅ ccache 缓存命中"
+        else
+          echo "❌ ccache 未命中"
         fi
 
     - name: 更新时区、编译时间
@@ -319,6 +340,10 @@ jobs:
       id: compile
       run: |
         cd openwrt
+        export CCACHE_DIR=~/.ccache
+        export CC="ccache gcc"
+        export CXX="ccache g++"
+        ccache -M 2G
         make -j$(nproc) || make -j1 V=s
 
     - name: 检查空间使用情况
@@ -431,14 +456,14 @@ jobs:
       with:
         token: ${{ secrets.MY_GITHUB_TOKEN }}
         repository: ${{ github.repository }}
-        retain_days: 30     #保留最后多少记录不删除
+        retain_days: 10     #保留最后多少记录不删除
         keep_minimum_runs: 0
 
     - name: 删除自动发布的旧固件
       uses: shidahuilang/delete-older-releases@main
       if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
-        keep_latest: 20         #保留多少个releases不删除
+        keep_latest: 10         #保留多少个releases不删除
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
