@@ -336,7 +336,7 @@ CONFIG_PACKAGE_luci-app-ttyd=y #ttyd
 CONFIG_PACKAGE_luci-app-wireguard=y #wireguard端
 CONFIG_PACKAGE_luci-app-lucky=y #lucky
 CONFIG_PACKAGE_luci-app-uhttpd=y #uhttpd
-CONFIG_PACKAGE_luci-app-GoWebDav=y #GoWebDav
+CONFIG_PACKAGE_luci-app-gowebdav=y #gowebdav
 CONFIG_PACKAGE_luci-app-filebrowser=y #filebrowser
 CONFIG_PACKAGE_luci-proto-wireguard=y
 #
