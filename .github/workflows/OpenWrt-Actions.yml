@@ -168,8 +168,8 @@ jobs:
         ln -sf /github-builder/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: 缓存加速
-      # uses: xcz-ns/cachewrtbuild@main
-      uses: stupidloud/cachewrtbuild@main
+      uses: xcz-ns/cachewrtbuild@main
+      # uses: stupidloud/cachewrtbuild@main
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
         ccache: 'true'
