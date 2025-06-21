@@ -118,12 +118,6 @@ jobs:
         git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
         ln -sf /github-builder/openwrt $GITHUB_WORKSPACE/openwrt
 
-    - name: 查看缓存目录内容
-      run: |
-        echo "HOME: $HOME"
-        ls -al $HOME/.ccache || echo "没有~/.ccache"
-        ls -al ${{ github.workspace }}/.ccache || echo "没有仓库根目录/.ccache"
-
     - name: 缓存加速
       uses: xcz-ns/cachewrtbuild@main
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
