@@ -303,7 +303,6 @@ EOF
 cat >> .config <<EOF
 # CONFIG_PACKAGE_luci-app-adbyby-plus=n #adbyby去广告
 CONFIG_PACKAGE_luci-app-accesscontrol=n
-CONFIG_PACKAGE_luci-app-ksmbd=n
 CONFIG_PACKAGE_luci-app-vsftpd=n
 # CONFIG_PACKAGE_luci-app-webadmin=n #Web管理页面设置
 CONFIG_PACKAGE_luci-app-ddns=y #DDNS服务
@@ -352,11 +351,12 @@ CONFIG_PACKAGE_luci-proto-wireguard=y
 #
 # 文件共享相关(禁用):
 #
-# CONFIG_PACKAGE_luci-app-minidlna=n #miniDLNA服务
-# CONFIG_PACKAGE_luci-app-vsftpd=n #FTP 服务器
-CONFIG_PACKAGE_luci-app-samba=y #网络共享
-# CONFIG_PACKAGE_autosamba=n #网络共享
-# CONFIG_PACKAGE_samba36-server=n #网络共享
+CONFIG_PACKAGE_luci-app-minidlna=n # miniDLNA服务
+CONFIG_PACKAGE_luci-app-vsftpd=n   # FTP服务器
+CONFIG_PACKAGE_luci-app-samba=y    # 启用LuCI网络共享界面
+CONFIG_PACKAGE_samba36-server=y    # 明确启用 samba36 主程序
+CONFIG_PACKAGE_autosamba=n         # 禁用 autosamba，避免冲突
+CONFIG_PACKAGE_luci-app-ksmbd=n    # 禁用 ksmbd LuCI 插件，彻底避免混用
 EOF
 
 # LuCI主题:
@@ -385,6 +385,7 @@ CONFIG_PACKAGE_libcap-bin=y
 CONFIG_PACKAGE_ip6tables-mod-nat=y
 CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_vsftpd=y
+CONFIG_PACKAGE_vsftpd-alt=n
 CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_qemu-ga=y
 CONFIG_PACKAGE_autocore-x86=y
