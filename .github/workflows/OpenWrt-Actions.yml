@@ -173,6 +173,16 @@ jobs:
       with:
         ccache: 'true'
         prefix: ${{ github.workspace }}/openwrt
+        mixkey: ''  # 清空mixkey，避免加hash，保持和现有缓存格式一致
+        
+    - name: 显示缓存命中状态
+      if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
+      run: |
+        if [ "${{ steps.cache.outputs.hit }}" = "true" ]; then
+          echo "✅ 缓存已命中，可以加速编译"
+        else
+          echo "❌ 未命中缓存，将执行完整编译"
+        fi
 
     - name: 更新时区、编译时间
       id: date
