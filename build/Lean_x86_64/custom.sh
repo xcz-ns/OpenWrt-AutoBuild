@@ -303,7 +303,6 @@ EOF
 cat >> .config <<EOF
 # CONFIG_PACKAGE_luci-app-adbyby-plus=n #adbyby去广告
 CONFIG_PACKAGE_luci-app-accesscontrol=n
-CONFIG_PACKAGE_luci-app-vsftpd=n
 # CONFIG_PACKAGE_luci-app-webadmin=n #Web管理页面设置
 CONFIG_PACKAGE_luci-app-ddns=y #DDNS服务
 CONFIG_DEFAULT_luci-app-vlmcsd=n #KMS激活服务器
