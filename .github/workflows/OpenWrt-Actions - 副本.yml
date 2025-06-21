@@ -123,7 +123,7 @@ jobs:
       if: env.CACHE_BUILD == 'true' || (github.event.inputs.CACHE_BUILD == 'true')
       with:
         ccache: 'true'
-        prefix: ${{ github.workspace }}/openwrt
+        prefix: ${{ github.workspace }}
 
     - name: 更新时区、编译时间
       id: date
